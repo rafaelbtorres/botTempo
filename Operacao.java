@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class Operacao implements Runnable {
 	double resposta = 0;
@@ -73,7 +72,7 @@ public class Operacao implements Runnable {
 			parser(line);
 			calculador();
 			try {
-				TimeUnit.SECONDS.sleep((long) operando1);
+				Thread.sleep(10000); //Sleep adicionado para poder observar o uso das threads
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,6 +84,5 @@ public class Operacao implements Runnable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("es estou aqui");
 	}
 }
