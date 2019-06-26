@@ -47,11 +47,12 @@ public class ServidorTempo {
     
     
     //Faz a busca de cidade por nome e/ou estado
-    public String doBuscadorCidadeHTTP(String cidade, String estado) {
+    public String doBuscadorCidadeHTTP(String cidade, String estado) throws InterruptedException {
         String retorno = null;
         try {
             HttpGet httpGet = new HttpGet(ServidorTempo.URLBase+"api/v1/locale/city?name="+cidade+"&state="+estado+"&token="+ServidorTempo.token);
-
+            System.out.println("Buscando ID referente a "+cidade+" - "+estado);
+            Thread.sleep(6000);
             //Aqui manipula o retorno recebido
             ResponseHandler<String> respondeHandler = new ResponseHandler<String>() {
                 @Override
@@ -72,6 +73,7 @@ public class ServidorTempo {
         } catch (IOException ex) {
             Logger.getLogger(ServidorTempo.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("ID encontrada!");
         return retorno;
     }
     
@@ -80,12 +82,13 @@ public class ServidorTempo {
     
 
     //Faz a requisição para o servidor mandando o codigo da cidade como parametro
-    public String doTempoAgora(String idCidade) {
+    public String doTempoAgora(String idCidade) throws InterruptedException {
         String retorno = null;
         try {
             //HttpGet httpGet = new HttpGet(ServidorTempo.URLBase+"/api/v1/weather/locale/363/current?token="+ServidorTempo.token);
             HttpGet httpGet = new HttpGet(ServidorTempo.URLBase+"/api/v1/weather/locale/"+idCidade+"/current?token="+ServidorTempo.token);
-
+            System.out.println("Buscando dados da cidade (ID: "+idCidade+")");
+            Thread.sleep(6000);
             //Aqui manipula o retorno recebido
             ResponseHandler<String> respondeHandler = new ResponseHandler<String>() {
                 @Override

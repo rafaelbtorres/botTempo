@@ -34,7 +34,9 @@ public class Operacao implements Runnable {
             //Transforma o que esta em Stream para String
             String line;
             line = bin.readLine();
-            System.out.println("Mensagem recebida: " + line);
+            System.out.println("Recebendo dados da cidade");
+            Thread.sleep(6000);
+            
 
             //Separa a string da cidade e do estado
             String[] textoSeparado = line.split(", ");
@@ -48,7 +50,7 @@ public class Operacao implements Runnable {
         
 
         //Retorna para o cliente o resultado da busca
-        System.out.println("Enviando respota para o cliente...");
+        System.out.println("Enviando resposta para o cliente...");
         try {
             Thread.sleep(6000);
         } catch (InterruptedException ex) {
@@ -84,6 +86,8 @@ public class Operacao implements Runnable {
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

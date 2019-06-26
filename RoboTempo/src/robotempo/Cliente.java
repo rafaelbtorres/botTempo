@@ -20,9 +20,9 @@ public class Cliente {
             //cria novo socket
             System.out.println("Conectando ao servidor...");
             Thread.sleep(6000);
-            System.out.println("----------------------------------------------");
-            System.out.println("Conexão realizada com sucesso na porta 9001!");
-            System.out.println("----------------------------------------------"
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("Conexão realizada com sucesso na porta 9001 e IP 127.0.0.0.1!");
+            System.out.println("-------------------------------------------------------------"
                     + "    ");
             sock = new Socket("127.0.0.1", 9001);
             in = sock.getInputStream();
@@ -53,16 +53,19 @@ public class Cliente {
             
             
             //Recebe a resposta do servidor
-            PrintWriter recebe = new PrintWriter(sock.getOutputStream(), true);
-
-            //Transforma o que esta em Stream para String
-            String line;
-            line = bin.readLine();
             System.out.println("--------------------------------------");
             System.out.println("Aguardando resposta do servidor!");
             System.out.println("--------------------------------------");
             System.out.println(" ");
+            Thread.sleep(6000);
+            PrintWriter recebe = new PrintWriter(sock.getOutputStream(), true);
+
+            //Transforma o que esta em Stream para String
+            String line;
+            line = bin.readLine();            
             while ((line = bin.readLine()) != null) {
+                System.out.println("Dados recebidos com sucesso!");
+                System.out.println("");
                 String[] dadosSeparados = line.split(",");
                 System.out.println("Cidade: "+ dadosSeparados[1]);
                 System.out.println("Estado: "+ dadosSeparados[2]);
