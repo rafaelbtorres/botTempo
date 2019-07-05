@@ -76,7 +76,7 @@ public class Operacao implements Runnable {
                         pout.println();
                     } catch (Exception e) {
                         System.out.println("ERRO de parâmetros");
-                        client.close();
+                        //client.close();
                         return;
                     }
                     while ((line = bin.readLine()) != null) {
@@ -98,10 +98,15 @@ public class Operacao implements Runnable {
                     ManipuladorJsonNoticia json = new ManipuladorJsonNoticia(0);
                     ManipuladorJsonNoticia json2 = new ManipuladorJsonNoticia(2);
                     ManipuladorJsonNoticia json3 = new ManipuladorJsonNoticia(4);
+                    
+                    Noticia selecionada = json.preenchendoDadosCidadeEscolhida();
+                    Noticia selecionada2 = json2.preenchendoDadosCidadeEscolhida();
+                    Noticia selecionada3 = json3.preenchendoDadosCidadeEscolhida();
+
 
                     pout.println(toString());
-
-                    //Armazena em buffer o resultado
+                    
+                     //Armazena em buffer o resultado
                     InputStreamReader isr = new InputStreamReader(System.in);
                     BufferedReader br = new BufferedReader(isr);
                     OutputStream outputStream = null;
@@ -112,24 +117,36 @@ public class Operacao implements Runnable {
                     }
 
                     //Transforma a string em Bytes
-                    System.out.println(json.toString());
-                    outputStream.write(json.toString().getBytes());
+                    System.out.println("Tratando dos dados recebidos");
+                    String autor = selecionada.getAutor();
+                    String titulo = selecionada.getTitulo();
+                    String resumo = selecionada.getResumo().toString();
+                    System.out.println(resumo);
+                    outputStream.write(autor.getBytes());
+                    PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
+                    outputStream.write(titulo.getBytes());
+                    envia = new PrintWriter(client.getOutputStream(), true);
+                    outputStream.write(resumo.getBytes());
+                    envia = new PrintWriter(client.getOutputStream(), true);
 
                     //Envia a String para o servidor
-                    PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
+                    System.out.println("Enviando dados para o cliente");
+                    //PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
                     try {
                         pout.println();
                     } catch (Exception e) {
                         System.out.println("ERRO de parâmetros");
-                        client.close();
+                        //client.close();
                         return;
                     }
-
-                } catch (IndexOutOfBoundsException t) {
+                    while ((line = bin.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
 
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } 
             }
         } catch (IOException x) {
 
