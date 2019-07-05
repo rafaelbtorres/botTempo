@@ -34,60 +34,105 @@ public class Operacao implements Runnable {
             //Transforma o que esta em Stream para String
             String line;
             line = bin.readLine();
-            System.out.println("Recebendo dados da cidade");
-            Thread.sleep(6000);
-            
+            if (line.contains(", ")) {
+                try {
+                    System.out.println("Recebendo dados da cidade");
+                    Thread.sleep(6000);
+                    //Separa a string da cidade e do estado
+                    String[] textoSeparado = line.split(", ");
+                    String cidade = textoSeparado[0];
+                    String estado = textoSeparado[1];
 
-            //Separa a string da cidade e do estado
-            String[] textoSeparado = line.split(", ");
-            String cidade = textoSeparado[0];
-            String estado = textoSeparado[1];
+                    //Inicia as funções normais do servidor do tempo
+                    ManipuladorJson run = new ManipuladorJson();
+                    String retornoBusca = run.buscaCidade(cidade, estado);
+                    pout.println(toString());
 
-            //Inicia as funções normais do servidor do tempo
-            ManipuladorJson run = new ManipuladorJson();
-            String retornoBusca = run.buscaCidade(cidade, estado);
-            pout.println(toString());
-        
+                    //Retorna para o cliente o resultado da busca
+                    System.out.println("Enviando resposta para o cliente...");
+                    try {
+                        Thread.sleep(6000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    bin = new BufferedReader(new InputStreamReader(in));
 
-        //Retorna para o cliente o resultado da busca
-        System.out.println("Enviando resposta para o cliente...");
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        bin = new BufferedReader(new InputStreamReader(in));
+                    //Armazena em buffer o resultado
+                    InputStreamReader isr = new InputStreamReader(System.in);
+                    BufferedReader br = new BufferedReader(isr);
+                    OutputStream outputStream = null;
+                    try {
+                        outputStream = client.getOutputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-        //Armazena em buffer o resultado
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-        OutputStream outputStream = null;
-        try {
-            outputStream = client.getOutputStream();
-        } catch (IOException ex) {
-            Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                    //Transforma a string em Bytes
+                    outputStream.write(retornoBusca.getBytes());
 
-        //Transforma a string em Bytes
-        outputStream.write(retornoBusca.getBytes());
+                    //Envia a String para o servidor
+                    PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
+                    try {
+                        pout.println();
+                    } catch (Exception e) {
+                        System.out.println("ERRO de parâmetros");
+                        client.close();
+                        return;
+                    }
+                    while ((line = bin.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
 
-        //Envia a String para o servidor
-        PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
-        try {
-            pout.println();
-        } catch (Exception e) {
-            System.out.println("ERRO de parâmetros");
-            client.close();
-            return;
-        }
-        while ((line = bin.readLine()) != null) {
-            System.out.println(line);
-        }
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                try {
+                    System.out.println("Buscando noticias na Web");
+                    Thread.sleep(6000);
+
+                    //Inicia as funções normais do servidor de noticias
+                    ServidorNoticias executa = ServidorNoticias.getInstancia();
+                    ManipuladorJsonNoticia json = new ManipuladorJsonNoticia(0);
+                    ManipuladorJsonNoticia json2 = new ManipuladorJsonNoticia(2);
+                    ManipuladorJsonNoticia json3 = new ManipuladorJsonNoticia(4);
+
+                    pout.println(toString());
+
+                    //Armazena em buffer o resultado
+                    InputStreamReader isr = new InputStreamReader(System.in);
+                    BufferedReader br = new BufferedReader(isr);
+                    OutputStream outputStream = null;
+                    try {
+                        outputStream = client.getOutputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    //Transforma a string em Bytes
+                    System.out.println(json.toString());
+                    outputStream.write(json.toString().getBytes());
+
+                    //Envia a String para o servidor
+                    PrintWriter envia = new PrintWriter(client.getOutputStream(), true);
+                    try {
+                        pout.println();
+                    } catch (Exception e) {
+                        System.out.println("ERRO de parâmetros");
+                        client.close();
+                        return;
+                    }
+
+                } catch (IndexOutOfBoundsException t) {
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Operacao.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (IOException x) {
+
         }
     }
 }
