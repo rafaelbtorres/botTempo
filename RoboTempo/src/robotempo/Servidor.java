@@ -15,6 +15,8 @@ public class Servidor
 			while (true) {
 				Thread worker = new Thread(new Operacao(sock.accept()));
 				worker.start();
+                                System.out.println("cliente conectado.");
+                               
 			}
 		}
 		catch (IOException ioe) {
